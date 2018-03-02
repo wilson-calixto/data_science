@@ -1,0 +1,107 @@
+
+import math	
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+#Desenhando um gráfico de pizza
+
+train_dataset = pd.read_csv('candidatos_deputados_2014_final.csv', encoding='latin-1')
+tabela = pd.pivot_table(data=train_dataset, values='NOME_CANDIDATO', index='NUMERO_PARTIDO', columns='DESC_SIT_TOT_TURNO', aggfunc='count')
+
+labels = '10','11','12','13','14','15','16','17','19','20','21','22','23','25','27','28','29','31','33','36','40','43','44','45','50','51','54','55','65','70','77','90'
+partidos=[10,11,12,13,14,15,16,17,19,20,21,22,23,25,27,28,29,31,33,36,40,43,44,45,50,51,54,55,65,70,77,90]
+
+pop={}
+
+total_de_eleitos_por_partido = []
+c=0
+for i in partidos:
+	num=0
+
+	if(math.isnan(tabela['ELEITO POR MÉDIA'][i])):
+		num+=0.0
+	else:
+		num+=tabela['ELEITO POR MÉDIA'][i]
+
+
+	if(math.isnan(tabela['ELEITO POR QP'][i])):
+		num+=0.0
+	else:
+		num+=tabela['ELEITO POR QP'][i]
+
+
+	if(math.isnan(tabela['SUPLENTE'][i])):
+		num+=0.0
+	else:
+		num+=tabela['SUPLENTE'][i]
+
+	total_de_eleitos_por_partido.append(num)
+#fazer cast no lugar disso	
+	pop[labels[c]]=num
+
+	c+=1
+
+
+
+
+partidos = [i for i in pop.keys()]
+
+votos = [j for j in pop.values()]
+
+popPos = np.arange(len(partidos))
+
+azul = "blue"
+
+verde = "green"
+
+preto = "black"
+
+
+
+
+plt.barh(popPos, votos, align='center', color=azul)
+plt.yticks(popPos, partidos)   
+
+plt.xlabel('Votos')    
+
+plt.title('Numero de candidatos eleitos por partido')
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
+
+cores = ['lightblue', 'green', 'blue', 'red','Maroon','Aquamarine','Beige','Black','Gold']    
+	
+explode = (0.1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)  # somente explode primeiro pedaço 
+
+total = sum(total_de_eleitos_por_partido)
+
+plt.pie(total_de_eleitos_por_partido, explode=explode, labels=labels, colors=cores,         autopct=lambda p: '{:.0f}'.format(p * total / 100), shadow=True, startangle=90)
+
+
+# Determina que as proporções sejam 'equal' de modo a desenhar o círculo             
+
+plt.axis('equal')
+#plt.show()
+
+
+
+
+
+'''
